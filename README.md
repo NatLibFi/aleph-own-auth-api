@@ -16,7 +16,7 @@ curl -u $USERNAME:$PASSWORD https://some-aleph-instance/aleph-own-auth-api
 ```
 ## Development
 1. Build the Docker image: `docker build . -t aleph-own-auth-api`
-1. Setup environt variables in `env` file
+1. Setup environment variables in `env` file
 1. Run `run-test-instance.sh`
 ## License and copyright
 

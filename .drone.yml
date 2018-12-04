@@ -6,6 +6,11 @@ matrix:
     DIRECTORY: /exlibris/aleph/u23_3/alephe/apache/htdocs/aleph-own-auth-api
     TAR_EXEC: /usr/sfw/bin/gtar
     INSTANCE: test
+  - HOST: alina.csc.fi
+    USER: aleph
+    DIRECTORY: /exlibris/aleph/u23_3/alephe/apache/htdocs/aleph-own-auth-api
+    TAR_EXEC: /usr/sfw/bin/gtar
+    INSTANCE: production
 pipeline:
 # Test
   test-deploy:

@@ -36,7 +36,7 @@ try:
         username, password = get_credentials(os.environ['HTTP_AUTHORIZATION'])
 
         if not validate_user(username, password):
-            print 'Status: 403'
+            print 'Status: 401'
             print
         else:
             data = parse(os.environ['TAB_FILE'])

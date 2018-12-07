@@ -23,12 +23,8 @@
 * for the Python code in this file.
 *
 '''
-import os
-import urllib2
-import re
-import base64
+
 import aleph_conf_parser
-import xml.etree.ElementTree as ElementTree
 
 def parse(tab_file):
     filename = tab_file
@@ -43,29 +39,6 @@ def transform(data):
     data_transformed = _stringsToDict(data)
     data_transformed = reduce(_listToDict, data_transformed, {})
     return reduce(_setsToLists, data_transformed.keys(), data_transformed)
-
-def get_credentials(header_value):
-    match = re.search('^Basic (.*)$', header_value)
-    decoded = base64.b64decode(match.group(1))
-    return re.split(':', decoded)
-
-def validate_user(username, password):
-    xml = urllib2.urlopen('%s/X?op=user-auth&library=%s&staff_user=%s&staff_pass=%s' % (os.environ['ALEPH_URL'], os.environ['ALEPH_USER_LIBRARY'], username, password)).read()
-    tree = ElementTree.fromstring(xml)
-
-    error = tree.find('./error')
-
-    if error != None:
-        if re.search('^No such staff member exist', error.text):
-            return False
-        else:
-            raise Exception(xml)
-
-    credentialsValid = tree.find('./reply').text == 'ok'
-
-    if not credentialsValid:
-        return False
-    return True
 
 def _stringsToDict(data):
     convertOwn = lambda l: map(lambda v: v.strip(), filter(lambda v: v, l))

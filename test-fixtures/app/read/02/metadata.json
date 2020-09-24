@@ -1,0 +1,14 @@
+{
+    "description": "Should find no authorizations for resource",
+    "tabFileContents": "FOO        BAR",
+    "requests": [
+        {
+            "method": "get",
+            "path": "/fubar",
+            "status": 404,
+            "requestHeaders": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            }
+        }
+    ]
+}

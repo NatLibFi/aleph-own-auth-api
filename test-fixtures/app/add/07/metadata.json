@@ -1,0 +1,18 @@
+{
+    "description": "Should crash because tab file line limit is met",
+    "tabFileContents": "FOO        BAR        FUBAR      BARFOO     FU123",
+    "appParams": {
+        "maxLinesTabFile": 2
+    },
+    "requests": [
+        {
+            "method": "post",
+            "path": "/foo",
+            "status": 500,
+            "requestHeaders": {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            }
+        }
+    ]
+}

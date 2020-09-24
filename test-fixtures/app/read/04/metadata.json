@@ -1,0 +1,17 @@
+{
+    "description": "Should find authorizations for resource",
+    "tabFileContents": "FOO        BAR        FUBAR",
+    "requests": [
+        {
+            "method": "get",
+            "path": "/foo",
+            "status": 200,
+            "requestHeaders": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            },
+            "responseHeaders": {
+                "Content-Type": "application/json; charset=utf-8"
+            }
+        }
+    ]
+}

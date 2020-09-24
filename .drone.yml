@@ -1,80 +1,140 @@
-branches: [master, test]
-matrix:
-  include:
-  - HOST: libtest1.csc.fi
-    USER: aleph
-    DIRECTORY: /exlibris/aleph/u23_3/alephe/apache/htdocs/aleph-own-auth-api/app
-    TAR_EXEC: /usr/sfw/bin/gtar
-    INSTANCE: test
-  - HOST: alina.csc.fi
-    USER: aleph
-    DIRECTORY: /exlibris/aleph/u23_3/alephe/apache/htdocs/aleph-own-auth-api/app
-    TAR_EXEC: /usr/sfw/bin/gtar
-    INSTANCE: production
-pipeline:
-# Test
-  test-deploy:
+---
+kind: pipeline
+type: docker
+name: Default
+
+trigger:
+  event:
+    - push
+
+steps:
+
+  - name: generate-tags
+    image: quay.io/natlibfi/drone-gen-tags
+
+  - name: audit
+    image: node:12
+    commands:
+      - npm audit --package-lock-only --production --audit-level=moderate
+
+  - name: install
+    image: node:12
+    commands:
+      - npm ci
+    environment:
+      NPM_CONFIG_IGNORE_SCRIPTS: true
+
+  - name: test
+    image: node:12
+    commands:
+      - npm test
+
+  - name: check-coverage
+    image: node:12
+    commands:
+      - npm run coverage
+
+  - name: build-production
+    image: node:12
+    commands:
+      - npm run build
+      - NPM_CONFIG_IGNORE_SCRIPTS=true npm ci --production
+    when:
+      branch: [master]
+
+  - name: build-test
+    image: node:12
+    commands:
+      - npm run build:dev
+      - NPM_CONFIG_IGNORE_SCRIPTS=true npm ci --production
+    when:
+      branch: [next]
+
+  - name: static-security-scan
+    image: quay.io/natlibfi/njsscan
+    commands:
+      - njsscan dist
+
+  - name: prepare-for-deploy
+    image: busybox:1
+    commands:
+      - mv node_modules dist/
+    when:
+      branch: [master, test]
+
+  - name: deploy
     image: quay.io/natlibfi/drone-plugin-scp
-    host: ${HOST}
-    username: ${USER}
-    target: ${DIRECTORY}
-    source: ['.']
-    rm: true
-    tar_exec: ${TAR_EXEC}
-    secrets:
-    - source: ssh_key_${HOST}
-      target: ssh_key
+    settings:
+      rm: true
+      source: ['dist/**']
+      strip_components: 1
+      target: /exlibris/linnea/aleph-own-auth-api/app
+      host:
+        from_secret: host_${DRONE_BRANCH}
+      username:
+        from_secret: username_${DRONE_BRANCH}
+      key:
+        from_secret: ssh_key_${DRONE_BRANCH}
     when:
-      branch: test
-      matrix:
-        INSTANCE: test
-  test-install-deps:
+      branch: [master, test]
+
+  - name: restart
     image: quay.io/natlibfi/drone-plugin-ssh
-    host: ${HOST}
-    username: ${USER}
-    script:
-    - cd ${DIRECTORY}
-    - curl -L -O https://github.com/NatLibFi/aleph-conf-parser/archive/master.zip
-    - unzip master.zip
-    - mv aleph-conf-parser-master aleph_conf_parser
-    - rm master.zip
-    secrets:
-    - source: ssh_key_${HOST}
-      target: ssh_key
+    settings:
+      script:
+        - kill `systemctl show -p ExecMainPID aleph-own-auth-api|cut -f2 -d'='`
+      host:
+        from_secret: host_${DRONE_BRANCH}
+      username:
+        from_secret: username_${DRONE_BRANCH}
+      key:
+        from_secret: ssh_key_${DRONE_BRANCH}
     when:
-      branch: test
-      matrix:
-        INSTANCE: test
-# Production
-  prod-deploy:
-    image: quay.io/natlibfi/drone-plugin-scp
-    host: ${HOST}
-    username: ${USER}
-    target: ${DIRECTORY}
-    source: ['.']
-    rm: true
-    tar_exec: ${TAR_EXEC}
-    secrets:
-    - source: ssh_key_${HOST}
-      target: ssh_key
-    when:
-      branch: master
-      matrix:
-        INSTANCE: production
-  prod-install-deps:
-    image: quay.io/natlibfi/drone-plugin-ssh
-    host: ${HOST}
-    username: ${USER}
-    script:
-    - cd ${DIRECTORY}
-    - curl -L -O https://github.com/NatLibFi/aleph-conf-parser/archive/master.zip
-    - unzip master.zip
-    - mv aleph-conf-parser-master aleph_conf_parser
-    - rm master.zip
-    secrets:
-    - source: ssh_key_${HOST}
-      target: ssh_key
-    when:
-      branch: master
-      matrix:
-        INSTANCE: production
+      branch: [master, test]
+---
+kind: pipeline
+type: docker
+name: Update dependencies
+
+trigger:
+  event:
+    - custom
+  branch:
+    - master
+
+steps:
+
+  - name: publish
+    image: quay.io/natlibfi/drone-npm-git-publish
+    settings:
+      git_user_name: natlibfi-melinda-automation
+      git_user_email: 65649125+natlibfi-melinda-automation@users.noreply.github.com
+      git_ssh_key:
+        from_secret: ssh_key
+      git_gpg_key:
+        from_secret: gpg_key
+---
+kind: secret
+name: ssh_key
+data: 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
+---
+kind: secret
+name: gpg_key
+data: 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
+---
+kind: secret
+name: username_test
+data: zncKOTao5nDwvsin4wpQ1e5lZVJd4/wxyTp0lZhGbThA
+---
+kind: secret
+name: host_test
+data: Jp62baWBCf+N2btOa7hL/O0LFmZXOR924ztYIzjGtHYLieXEGj6N2cpUgBxk
+---
+kind: secret
+name: ssh_key_test
+data: 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
+---
+kind: signature
+hmac: 598f63e05d1da1858979bb85dc3419fe6c3b953d9eb2b96fc44320d118f167e8
+
+...

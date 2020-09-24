@@ -1,0 +1,10 @@
+{
+    "description": "Should fail authorization",
+    "requests": [
+        {
+            "method": "post",
+            "path": "/foo",
+            "status": 401
+        }
+    ]
+}

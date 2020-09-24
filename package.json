@@ -1,0 +1,106 @@
+{
+	"name": "@natlibfi/aleph-own-auth-api",
+	"description": "HTTP API to manage Aleph users' OWN authorizations",
+	"author": {
+		"name": "The National Library of Finland"
+	},
+	"keywords": [],
+	"homepage": "https://github.com/natlibfi/aleph-own-auth-api",
+	"bugs": {
+		"url": "https://github.com/natlibfi/aleph-own-auth-api/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:natlibfi/aleph-own-auth-api.git"
+	},
+	"license": "AGPL-3.0+",
+	"version": "1.0.0",
+	"main": "./dist/index.js",
+	"engines": {
+		"node": ">=12"
+	},
+	"scripts": {
+		"lint": "eslint src",
+		"lint:dev": "eslint --fix src",
+		"test:base": "cross-env NODE_ENV=test nyc mocha --require @babel/register",
+		"test": "npm run lint && npm run test:base -- src/**/*.spec.js && npm run coverage",
+		"test:dev": "npm run lint:dev && npm run test:base -- src/**/*.spec.js && npm run coverage",
+		"coverage": "nyc check-coverage --per-file",
+		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist --minified",
+		"build:dev": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
+		"watch:test": "cross-env DEBUG=1 NODE_ENV=test nodemon -w src --exec 'npm run test:dev'",
+		"watch:dev": "cross-env DEBUG=1 nodemon -w src --exec 'babel-node src/index.js'"
+	},
+	"dependencies": {
+		"@babel/runtime": "^7.11.2",
+		"@natlibfi/express-validate-content-type": "^1.0.0",
+		"@natlibfi/melinda-backend-commons": "^2.0.0",
+		"@natlibfi/melinda-commons": "^10.0.3",
+		"body-parser": "^1.0.0",
+		"express": "^4.17.1",
+		"helmet": "^4.1.0",
+		"http-status": "^1.4.0",
+		"passport": ">=0.4.1 < 1.0.0",
+		"passport-jwt": "^4.0.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.11.6",
+		"@babel/core": "^7.11.6",
+		"@babel/node": "^7.10.5",
+		"@babel/preset-env": "^7.11.5",
+		"@babel/register": "^7.11.5",
+		"@natlibfi/eslint-config-melinda-backend": "^1.0.5",
+		"@natlibfi/fixugen-http-server": "^1.0.2",
+		"@natlibfi/fixura": "^2.1.3",
+		"babel-eslint": "^10.1.0",
+		"babel-plugin-istanbul": "^6.0.0",
+		"babel-plugin-rewire": "^1.2.0",
+		"chai": "^4.2.0",
+		"chai-http": "^4.3.0",
+		"cross-env": "^7.0.2",
+		"eslint": "^7.8.1",
+		"mocha": "^8.1.3",
+		"mock-fs": "^4.13.0",
+		"nodemon": "^2.0.4",
+		"nyc": "^15.1.0"
+	},
+	"eslintConfig": {
+		"extends": "@natlibfi/melinda-backend"
+	},
+	"babel": {
+		"presets": [
+			[
+				"@babel/preset-env",
+				{
+					"targets": "maintained node versions"
+				}
+			]
+		],
+		"env": {
+			"test": {
+				"plugins": [
+					"istanbul",
+					"rewire"
+				]
+			}
+		}
+	},
+	"nyc": {
+		"exclude": [
+			"*/*.spec.js"
+		],
+		"reporter": [
+			"lcov",
+			"html"
+		],
+		"require": [
+			"@babel/register"
+		],
+		"sourceMap": false,
+		"instrument": false,
+		"lines": 80,
+		"statements": 80,
+		"functions": 80,
+		"branches": 80
+	}
+}

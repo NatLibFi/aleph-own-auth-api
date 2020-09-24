@@ -1,0 +1,14 @@
+{
+    "description": "Should not find resource (Resource name too long)",
+    "tabFileContents": "FOO        BAR",
+    "requests": [
+        {
+            "method": "get",
+            "path": "/foooooooooo",
+            "status": 404,
+            "requestHeaders": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            }
+        }
+    ]
+}

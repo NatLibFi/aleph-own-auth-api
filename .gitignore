@@ -1,6 +1,6 @@
-*.pyc
-aleph_conf_parser
-aleph-conf-parser
-env
-tab_own
-
+npm-debug.log
+node_modules
+coverage
+dist
+.nyc_output
+.env*

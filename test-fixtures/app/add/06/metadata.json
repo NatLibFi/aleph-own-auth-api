@@ -1,0 +1,15 @@
+{
+    "description": "Should add new authorizations (More than 5 tags go to a different line)",
+    "tabFileContents": "FOO        BAR        FUBAR      BARFOO     FU123",
+    "requests": [
+        {
+            "method": "post",
+            "path": "/foo",
+            "status": 204,
+            "requestHeaders": {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            }
+        }
+    ]
+}

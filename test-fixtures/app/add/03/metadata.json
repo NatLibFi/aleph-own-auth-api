@@ -1,0 +1,14 @@
+{
+    "description": "Should fail because payload has invalid tags",
+    "requests": [
+        {
+            "method": "post",
+            "status": 422,
+            "path": "/foo",
+            "requestHeaders": {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
+            }
+        }
+    ]
+}

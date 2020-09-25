@@ -48,7 +48,7 @@ steps:
       - npm run build:dev
       - NPM_CONFIG_IGNORE_SCRIPTS=true npm ci --production
     when:
-      branch: [next]
+      branch: [test]
 
   - name: static-security-scan
     image: quay.io/natlibfi/njsscan
@@ -59,6 +59,7 @@ steps:
     image: busybox:1
     commands:
       - mv node_modules dist/
+      - ls -d dist/
     when:
       branch: [master, test]
 
@@ -135,6 +136,6 @@ name: ssh_key_test
 data: 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
 ---
 kind: signature
-hmac: 598f63e05d1da1858979bb85dc3419fe6c3b953d9eb2b96fc44320d118f167e8
+hmac: ac10ff274c492c1357885001e476dd837521c69c5695a869a31dd3a4474150f3
 
 ...

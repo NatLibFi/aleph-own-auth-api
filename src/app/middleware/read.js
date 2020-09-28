@@ -26,8 +26,6 @@
 *
 */
 
-import {Error as ApiError} from '@natlibfi/melinda-commons';
-import HttpStatus from 'http-status';
 import {validateRequest, getLines, parseLines} from './common';
 
 export default ({tabFile}) => async (req, res, next) => {
@@ -36,11 +34,6 @@ export default ({tabFile}) => async (req, res, next) => {
 
     const username = req.params.id.toUpperCase();
     const lines = await getLines(tabFile, username);
-
-    if (lines.length === 0) { // eslint-disable-line functional/no-conditional-statement
-      throw new ApiError(HttpStatus.NOT_FOUND);
-    }
-
     const tags = parseLines(username, lines);
 
     return res.json(tags);

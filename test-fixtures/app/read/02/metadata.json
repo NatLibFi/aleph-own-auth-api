@@ -5,7 +5,7 @@
         {
             "method": "get",
             "path": "/fubar",
-            "status": 404,
+            "status": 200,
             "requestHeaders": {
                 "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZvb2JhciJ9.U1K19xDGn_vwdGQHhhZohNhBCwJDOqLsqbeXczl-s7g"
             }

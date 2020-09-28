@@ -33,7 +33,7 @@ import {createInterface as createReadlineInterface} from 'readline';
 
 export function validateRequest(req) {
   // Make sure that the username is Aleph compliant. Otherwise it cannot be valid
-  if ((/^\w+$/u).test(req.params.id) === false || req.params.id.length > 10) { // eslint-disable-line functional/no-conditional-statement
+  if (req.params.id.length > 10) { // eslint-disable-line functional/no-conditional-statement
     throw new ApiError(HttpStatus.NOT_FOUND);
   }
 

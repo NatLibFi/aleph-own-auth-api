@@ -33,14 +33,14 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.11.2",
-		"@natlibfi/express-validate-content-type": "^1.0.0",
-		"@natlibfi/melinda-backend-commons": "^2.0.0",
-		"@natlibfi/melinda-commons": "^11.0.1",
-		"body-parser": "^1.0.0",
+		"@natlibfi/express-validate-content-type": "^1.0.1",
+		"@natlibfi/melinda-backend-commons": "^2.0.2",
+		"@natlibfi/melinda-commons": "^11.1.1",
+		"body-parser": "^1.19.0",
 		"express": "^4.17.1",
 		"helmet": "^4.1.1",
-		"http-status": "^1.4.0",
-		"passport": ">=0.4.1 < 1.0.0",
+		"http-status": "^1.4.2",
+		"passport": "^0.4.1",
 		"passport-jwt": "^4.0.0"
 	},
 	"devDependencies": {
